@@ -1,0 +1,16 @@
+# Robots.txt para Jean Tattoo
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://jeantattoo.com.br/sitemap.xml
+
+# Bloquear pastas de admin/sistema
+Disallow: /admin/
+Disallow: /apps-script/
+Disallow: /formulario/
+
+# Permitir recursos estáticos
+Allow: /Imagem/
+Allow: /videos/
+Allow: /destques/
