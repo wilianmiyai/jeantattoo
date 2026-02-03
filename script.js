@@ -1,4 +1,4 @@
-﻿/* ==========================================
+/* ==========================================
    JEAN TATTOO - LANDING PAGE PREMIUM
    JavaScript - Interações e Funcionalidades
    ========================================== */
@@ -1365,8 +1365,8 @@ const AgendamentoForm = {
             // Buscar estatísticas do servidor
             const stats = await this.buscarEstatisticasSemana();
             
-            if (stats.disponiveis !== undefined) {
-                const disponiveis = stats.disponiveis;
+            if (stats.ok && stats.vagasDisponiveis !== undefined) {
+                const disponiveis = stats.vagasDisponiveis;
                 let texto = '';
                 let classe = '';
                 
@@ -1386,10 +1386,16 @@ const AgendamentoForm = {
                 
                 slotsNumber.textContent = texto;
                 slotsNumber.className = `slots-number ${classe}`;
+            } else {
+                // Resposta sem dados válidos
+                slotsNumber.textContent = 'Consulte disponibilidade';
+                slotsNumber.className = 'slots-number plenty';
             }
         } catch (e) {
-            // Fallback: mostrar texto genérico
-            slotsNumber.textContent = '📅 Consulte disponibilidade';
+            // Fallback: mostrar texto genérico sem ficar carregando
+            console.log('Erro ao buscar estatísticas:', e);
+            slotsNumber.textContent = 'Consulte disponibilidade';
+            slotsNumber.className = 'slots-number plenty';
         }
     },
     
@@ -1400,10 +1406,20 @@ const AgendamentoForm = {
         
         const url = `${this.config.webAppUrl}?action=estatisticas&_t=${Date.now()}`;
         
+        // Timeout de 8 segundos
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        
         try {
-            const response = await fetch(url, { method: 'GET', redirect: 'follow' });
+            const response = await fetch(url, { 
+                method: 'GET', 
+                redirect: 'follow',
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
             return await response.json();
         } catch (e) {
+            clearTimeout(timeoutId);
             throw e;
         }
     },
