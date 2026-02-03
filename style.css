@@ -4,6 +4,13 @@
    Mobile-First | Performance Otimizada
    ========================================== */
 
+.grecaptcha-badge {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: fixed !important;
+    right: -9999px !important;
+}
+
 /* ==================== VARIÁVEIS CSS ==================== */
 :root {
     /* Cores Principais - PRETO E DOURADO */
